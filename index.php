@@ -35,7 +35,7 @@ include('inc/config.php');
 						$filename = $_FILES['gambar']['name'];
 						$filetype = $_FILES['gambar']['type'];
 						$filesize = $_FILES['gambar']['size'];
-						$destination = 'uploads/'.$filename;
+						$destination = 'inc/'.$filename;
 
 						if(move_uploaded_file($tmp_file, $destination)){
 							$gambar = $filename;
@@ -60,7 +60,7 @@ include('inc/config.php');
 						<p><input type='number' name='telepon' value='$isi[Tlpn]' placeholder='telepon' required></p>
 						<p><input type='text' name='jenis_kelamin' value='$isi[Jeniskelamin]' placeholder='jenis kelamin' required></p>
 						<p><input type='email' name='email' value='$isi[Email]' placeholder='email' required></p>
-						<img src='uploads/$isi[Foto]' alt='$isi [nama_alat]' width='200px'><br>
+						<img src='inc/$isi[Foto]' alt='$isi [nama_alat]' width='200px'><br>
 
 						<p><input type='file' name='gambar'></p>
 						<p><input type='submit' name='proses' value='Simpan' style = 'background-color: #008CBA;  border: none;
@@ -80,7 +80,7 @@ include('inc/config.php');
 						$filetype = $_FILES['gambar']['type'];
 						$filesize = $_FILES['gambar']['size'];
 
-						$destination = 'uploads/' . $filename;
+						$destination = 'inc/' . $filename;
 
 						if(move_uploaded_file($tmp_file, $destination)){
 							$gambar = $filename;
@@ -91,6 +91,15 @@ include('inc/config.php');
 						echo "Data Berhasil Diedit";
 					}else{
 						echo "Data Gagal Diedit";
+					}
+					echo "<hr>";
+				}elseif(isset($_GET['act']) AND $_GET['act']=='hapus'){
+					$hapus = mysqli_query($connect, "DELETE from siswa where id_siswa = '$_GET[id]'");
+
+					if($hapus){
+						echo "Data Berhasil Dihapus";
+					}else{
+						echo "Data Gagal Dihapus";
 					}
 					echo "<hr>";
 				}
@@ -122,7 +131,7 @@ include('inc/config.php');
 					while($data = mysqli_fetch_array($query)){ $i++;?>
 						<tr>
 							<td><?php echo $i?></td>
-							<td><img src="uploads/<?php echo $data['Foto']?>" width="200px"></td>
+							<td><img src="inc/<?php echo $data['Foto']?>" width="200px"></td>
 							<td><?php echo $data['Nama']?></td>
 							<td><?php echo $data['Tlpn']?></td>
 							<td><?php echo $data['Jeniskelamin']?></td>
