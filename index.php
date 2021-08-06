@@ -50,7 +50,51 @@ include('inc/config.php');
 					}
 					echo "<hr>";
 				
+				}elseif(isset($_GET['act']) AND $_GET['act']=='edit'){
+					$isi = mysqli_fetch_array(mysqli_query($connect, "SELECT * FROM siswa WHERE id_siswa = '$_GET[id]'"));
+					echo "
+						<h3>Edit Data</h3>
+						<form name='edit' action='?act=proses_edit' method='post' enctype='multipart/form-data'>
+						<input type='hidden' name='id_siswa' value='$isi[id_siswa]'>
+						<p><input type='text' name='nama_siswa' value='$isi[Nama]' placeholder='nama siswa' required></p>
+						<p><input type='number' name='telepon' value='$isi[Tlpn]' placeholder='telepon' required></p>
+						<p><input type='text' name='jenis_kelamin' value='$isi[Jeniskelamin]' placeholder='jenis kelamin' required></p>
+						<p><input type='email' name='email' value='$isi[Email]' placeholder='email' required></p>
+						<img src='uploads/$isi[Foto]' alt='$isi [nama_alat]' width='200px'><br>
+
+						<p><input type='file' name='gambar'></p>
+						<p><input type='submit' name='proses' value='Simpan' style = 'background-color: #008CBA;  border: none;
+  						color: white;
+  						padding: 15px 32px;
+  						text-align: center;
+  						text-decoration: none;
+  						display: inline-block;
+  						font-size: 16px;'></p>
+				";
+			}elseif (isset($_GET['act'])AND $_GET['act']=='proses_edit'){
+					if($_FILES['gambar']['error'] !=0){
+						$edit = mysqli_query($connect, "UPDATE siswa SET Nama = '$_POST[nama]', Tlpn = '$_POST[telepon]', Jeniskelamin = '$_POST[jenis_kelamin]' , Email= '$_post[email]' where id_siswa = '$_POST[id_siswa]'");
+					}else{
+						$tmp_file = $_FILES['gambar']['tmp_name'];
+						$filename = $_FILES['gambar']['name'];
+						$filetype = $_FILES['gambar']['type'];
+						$filesize = $_FILES['gambar']['size'];
+
+						$destination = 'uploads/' . $filename;
+
+						if(move_uploaded_file($tmp_file, $destination)){
+							$gambar = $filename;
+						}
+						$edit = mysqli_query($connect, "UPDATE siswa SET Nama = '$_POST[nama]', Tlpn = '$_POST[telepon]', Jeniskelamin = '$_POST[jenis_kelamin]' , Email= '$_post[email]', Foto= '$gambar' where id_siswa = '$_POST[id_siswa]'");
+					}
+					if($edit){
+						echo "Data Berhasil Diedit";
+					}else{
+						echo "Data Gagal Diedit";
+					}
+					echo "<hr>";
 				}
+
 	?>
 	<a href="?act=tambah">
 	<button type="button" style="background-color: #4CAF50; /* Green */
